@@ -1,0 +1,29 @@
+---
+// Scaffolded but not linked from nav yet. To activate:
+//   1. Add real project entries below
+//   2. Uncomment the "Projects" <li> in src/components/Header.astro
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const pageTitle = "Projects";
+const pageDescription = "Selected projects.";
+---
+
+<Layout
+  title={`${pageTitle} | ${config.site.title}`}
+  description={pageDescription}
+>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle={pageTitle} class="app-prose">
+    <p>Coming soon.</p>
+  </Main>
+
+  <Footer />
+</Layout>

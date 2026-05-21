@@ -13,8 +13,9 @@ const pageDescription =
 type Project = {
   title: string;
   meta: string;
-  status?: string;
-  blurb: string;
+  status?: "Live" | "In progress" | "Research";
+  hook: string;
+  description: string;
   stack: string[];
   links: { label: string; url: string }[];
 };
@@ -22,9 +23,11 @@ type Project = {
 const projects: Project[] = [
   {
     title: "3D-Agent",
-    meta: "Graduation project · Team of 4 · In progress",
-    blurb:
-      "Multi-model text-to-3D generation pipeline. An agent with a 12-tool layer orchestrates TRELLIS.2, PartCrafter, and Hunyuan3D (via Google AI Studio) behind a FastAPI + Modal inference backend and a Django web UI. I own the Django interface and the agent runtime, and co-developed an image-restyling preprocessor that conforms 2D inputs to an Objaverse-style distribution to improve reconstruction quality.",
+    meta: "Graduation project · Team of 4",
+    status: "In progress",
+    hook: "Text in, 3D out — but smart about which model to use.",
+    description:
+      "A graduation project building the agent layer over a fragmented 3D generation ecosystem. The runtime decides between TRELLIS.2, PartCrafter, and Hunyuan3D for each request, then routes through a FastAPI + Modal inference backend with a Django web UI. I own the agent runtime and its 12-tool surface, plus an image-restyling preprocessor that conforms 2D inputs to an Objaverse-style distribution so reconstruction quality holds up across input styles.",
     stack: [
       "PyTorch",
       "LangChain",
@@ -32,28 +35,30 @@ const projects: Project[] = [
       "Modal",
       "Django",
       "Google AI Studio",
-      "uv",
     ],
     links: [{ label: "GitHub", url: "https://github.com/hecrw/3D-Agent" }],
   },
   {
     title: "Diffusion Models for EEG Reconstruction",
-    meta: "Research intern · University of Tsukuba · Sept 2025 – Feb 2026",
-    blurb:
-      "Implemented DDPM, DDIM, and LDM diffusion variants in PyTorch for EEG signal reconstruction on the anphy-sleep dataset (29 subjects, 83-channel HD-EEG). Compared data-, noise-, and velocity-prediction parameterizations and selected velocity-prediction as the optimal training objective. Proposed signal-space diffusion over latent-space alternatives — adopted as the working architecture after lab approval, tailored to EEG noise distributions.",
-    stack: ["PyTorch", "DDPM", "DDIM", "LDM", "EEG / HD-EEG"],
+    meta: "Research intern · University of Tsukuba",
+    status: "Research",
+    hook: "Diffusion models — the tech behind Stable Diffusion — applied to brain signals.",
+    description:
+      "A six-month research stint applying generative diffusion to high-density EEG. Implemented DDPM, DDIM, and LDM variants in PyTorch on the anphy-sleep dataset (29 subjects, 83-channel HD-EEG), then ran a controlled comparison of data-, noise-, and velocity-prediction objectives and landed on velocity-prediction. Proposed signal-space diffusion over the lab's default latent-space approach; the architecture was adopted after review for its better fit with EEG noise distributions.",
+    stack: ["PyTorch", "DDPM", "DDIM", "LDM", "HD-EEG"],
     links: [
-      { label: "Tsukuba", url: "https://www.tsukuba.ac.jp/" },
+      { label: "University of Tsukuba", url: "https://www.tsukuba.ac.jp/" },
     ],
   },
   {
-    title: "Falcon-RW 1B — 4-bit Quantized Text Generation",
+    title: "Falcon-RW 1B — 4-bit Quantization",
     meta: "Solo · 2025",
-    blurb:
-      "Quantized Falcon-RW 1B to 4-bit NormalFloat (NF4) with double quantization via bitsandbytes — roughly 75% smaller than float32 — and configured a bfloat16 compute dtype with a CUDA → MPS → CPU device-fallback chain. Cached model loading powers both a Gradio UI and a FastAPI /generate endpoint. Containerized with Docker and deployed to Hugging Face Spaces.",
+    status: "Live",
+    hook: "A 1B-parameter LLM that runs on a laptop.",
+    description:
+      "Took Falcon-RW 1B from a float32 model that needs a real GPU down to NF4 4-bit with double quantization via bitsandbytes — roughly 75% smaller — without losing the ability to ship it as a real product. A bfloat16 compute dtype with a CUDA → MPS → CPU fallback chain and cached loading lets the same model power both a Gradio UI and a FastAPI /generate endpoint. Containerized with Docker, deployed to Hugging Face Spaces.",
     stack: [
-      "Python",
-      "Hugging Face Transformers",
+      "Transformers",
       "bitsandbytes",
       "FastAPI",
       "Gradio",
@@ -71,10 +76,12 @@ const projects: Project[] = [
     ],
   },
   {
-    title: "FraudShieldML — Credit Card Fraud Detection",
+    title: "FraudShieldML",
     meta: "Solo · 2025",
-    blurb:
-      "End-to-end fraud detection on a severely imbalanced dataset (0.17% positives) reaching 0.93 precision, 0.82 recall, and 0.86 PR AUC. Feature pipeline uses log-transformed amounts, cyclic temporal encoding, standard scaling, and SMOTE resampling. A threshold-tuned Random Forest classifier is served through FastAPI and a Gradio UI, containerized with Docker Compose, deployed on Hugging Face Spaces.",
+    status: "Live",
+    hook: "Catching credit-card fraud where the positive class is 0.17% of the data.",
+    description:
+      "End-to-end fraud detection on a brutally imbalanced dataset, ending at 0.93 precision, 0.82 recall, and 0.86 PR AUC. The feature pipeline log-transforms amounts, cyclically encodes time-of-day, scales, and applies SMOTE to fight the class imbalance. A threshold-tuned Random Forest ships behind a FastAPI service and a Gradio UI, containerized with Docker Compose and deployed to Hugging Face Spaces.",
     stack: [
       "scikit-learn",
       "XGBoost",
@@ -95,6 +102,12 @@ const projects: Project[] = [
     ],
   },
 ];
+
+const statusStyles: Record<NonNullable<Project["status"]>, string> = {
+  Live: "border-accent/40 text-accent",
+  "In progress": "border-border opacity-80",
+  Research: "border-border opacity-80",
+};
 ---
 
 <Layout
@@ -104,37 +117,59 @@ const projects: Project[] = [
   <Header />
   <Breadcrumb />
   <Main pageTitle={pageTitle} pageDesc={pageDescription}>
-    <div class="mt-2 space-y-10">
+    <div class="mt-4 grid gap-6">
       {
         projects.map(project => (
-          <article class="border-border border-b pb-8 last:border-b-0">
-            <header class="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <h2 class="text-xl font-semibold sm:text-2xl">{project.title}</h2>
-              <p class="text-sm opacity-80">{project.meta}</p>
+          <article class="border-border hover:border-accent/50 group rounded-lg border p-5 transition-colors sm:p-6">
+            <header class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h2 class="text-xl font-semibold tracking-tight sm:text-2xl">
+                  {project.title}
+                </h2>
+                {project.status && (
+                  <span
+                    class:list={[
+                      "rounded-full border px-2 py-0.5 text-xs font-medium",
+                      statusStyles[project.status],
+                    ]}
+                  >
+                    {project.status}
+                  </span>
+                )}
+              </div>
+              <p class="text-sm opacity-70">{project.meta}</p>
             </header>
-            <p class="mb-3 leading-relaxed">{project.blurb}</p>
-            <p class="mb-3 text-sm">
-              <span class="font-semibold">Stack:</span>{" "}
-              <span class="opacity-90">{project.stack.join(" · ")}</span>
+
+            <p class="text-accent mb-3 text-base italic sm:text-lg">
+              {project.hook}
             </p>
+
+            <p class="mb-4 leading-relaxed opacity-90">{project.description}</p>
+
+            <ul class="mb-4 flex flex-wrap gap-1.5">
+              {project.stack.map(item => (
+                <li class="border-border bg-muted/30 rounded border px-2 py-0.5 font-mono text-xs">
+                  {item}
+                </li>
+              ))}
+            </ul>
+
             {project.links.length > 0 && (
-              <p class="text-sm">
-                {project.links.map((link, i) => (
-                  <>
-                    {i > 0 && <span class="mx-2 opacity-50">&middot;</span>}
-                    <a
-                      href={link.url}
-                      target={link.url.startsWith("http") ? "_blank" : undefined}
-                      rel={
-                        link.url.startsWith("http") ? "noopener" : undefined
-                      }
-                      class="hover:text-accent underline decoration-dashed underline-offset-4"
-                    >
-                      {link.label}
-                    </a>
-                  </>
+              <div class="flex flex-wrap gap-2">
+                {project.links.map(link => (
+                  <a
+                    href={link.url}
+                    target={link.url.startsWith("http") ? "_blank" : undefined}
+                    rel={link.url.startsWith("http") ? "noopener" : undefined}
+                    class="border-border hover:border-accent hover:text-accent inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-sm font-medium transition-colors"
+                  >
+                    {link.label}
+                    <span aria-hidden="true" class="text-xs">
+                      &#8599;
+                    </span>
+                  </a>
                 ))}
-              </p>
+              </div>
             )}
           </article>
         ))

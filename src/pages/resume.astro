@@ -18,12 +18,14 @@ const lastUpdated = "May 2026";
   <Header />
   <Breadcrumb />
   <Main pageTitle={pageTitle}>
-    <div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+    <div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
       <a
         href="/resume.pdf"
-        class="hover:text-accent underline decoration-dashed underline-offset-4"
-        >Download PDF</a
+        class="border-border hover:border-accent hover:bg-accent inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 font-medium transition-colors hover:text-white"
       >
+        Download PDF
+        <span aria-hidden="true">&darr;</span>
+      </a>
       <span class="opacity-70">Last updated {lastUpdated}</span>
     </div>
 
@@ -31,17 +33,17 @@ const lastUpdated = "May 2026";
       Alexandria, Egypt &middot;
       <a
         href="mailto:itshamedahmed@gmail.com"
-        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
         >itshamedahmed@gmail.com</a
       > &middot;
       <a
         href="https://github.com/HamedDaoud"
-        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
         >github.com/HamedDaoud</a
       > &middot;
       <a
         href="https://www.linkedin.com/in/hameddaoud/"
-        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
         >linkedin.com/in/hameddaoud</a
       >
     </p>
@@ -136,7 +138,7 @@ const lastUpdated = "May 2026";
           <strong>3D-Agent &mdash; Graduation Project</strong>
           <a
             href="https://github.com/hecrw/3D-Agent"
-            class="text-sm hover:text-accent underline decoration-dashed underline-offset-4"
+            class="text-sm text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
             >github.com/hecrw/3D-Agent</a
           >
         </div>
@@ -165,13 +167,13 @@ const lastUpdated = "May 2026";
           <span class="text-sm">
             <a
               href="https://github.com/HamedDaoud/FraudShieldML"
-              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
               >github.com/HamedDaoud/FraudShieldML</a
             >
             &middot;
             <a
               href="https://huggingface.co/spaces/hameddaoud/fraudshield-ml"
-              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
               >live demo</a
             >
           </span>
@@ -202,13 +204,13 @@ const lastUpdated = "May 2026";
           <span class="text-sm">
             <a
               href="https://github.com/HamedDaoud/quantized-falcon-rw-1b"
-              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
               >github.com/HamedDaoud/quantized-falcon-rw-1b</a
             >
             &middot;
             <a
               href="https://huggingface.co/spaces/hameddaoud/quantized-falcon-rw-1b"
-              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
               >live demo</a
             >
           </span>

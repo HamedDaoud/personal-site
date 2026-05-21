@@ -1,0 +1,279 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const pageTitle = "Resume";
+const pageDescription = "Resume — Hamed Daoud.";
+const lastUpdated = "May 2026";
+---
+
+<Layout
+  title={`${pageTitle} | ${config.site.title}`}
+  description={pageDescription}
+>
+  <Header />
+  <Breadcrumb />
+  <Main pageTitle={pageTitle}>
+    <div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+      <a
+        href="/resume.pdf"
+        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        >Download PDF</a
+      >
+      <span class="opacity-70">Last updated {lastUpdated}</span>
+    </div>
+
+    <p class="mb-8 text-sm leading-relaxed sm:text-base">
+      Alexandria, Egypt &middot;
+      <a
+        href="mailto:itshamedahmed@gmail.com"
+        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        >itshamedahmed@gmail.com</a
+      > &middot;
+      <a
+        href="https://github.com/HamedDaoud"
+        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        >github.com/HamedDaoud</a
+      > &middot;
+      <a
+        href="https://www.linkedin.com/in/hameddaoud/"
+        class="hover:text-accent underline decoration-dashed underline-offset-4"
+        >linkedin.com/in/hameddaoud</a
+      >
+    </p>
+
+    <section class="mb-8">
+      <h2
+        class="border-border mb-3 border-b pb-1 text-lg font-semibold tracking-wide uppercase"
+      >
+        Education
+      </h2>
+
+      <div class="mb-4">
+        <div class="flex flex-wrap justify-between gap-x-4">
+          <strong>Egypt-Japan University of Science and Technology (E-JUST)</strong>
+          <span>Alexandria, Egypt</span>
+        </div>
+        <div class="flex flex-wrap justify-between gap-x-4 text-sm italic">
+          <span
+            >B.Sc. in Computer Science &amp; Information Technology &mdash; AI
+            &amp; Data Science Major</span
+          >
+          <span>2022 &ndash; Fall 2026 (Expected)</span>
+        </div>
+        <div class="text-sm italic">CGPA: 3.87 / 4.00</div>
+      </div>
+
+      <div>
+        <div class="flex flex-wrap justify-between gap-x-4">
+          <strong>University of Tsukuba</strong>
+          <span>Tsukuba, Japan</span>
+        </div>
+        <div class="flex flex-wrap justify-between gap-x-4 text-sm italic">
+          <span
+            >School of Informatics &mdash; EJEP Short-Term Exchange Program</span
+          >
+          <span>Sept 2025 &ndash; Feb 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2
+        class="border-border mb-3 border-b pb-1 text-lg font-semibold tracking-wide uppercase"
+      >
+        Experience
+      </h2>
+
+      <div>
+        <div class="flex flex-wrap justify-between gap-x-4">
+          <strong>University of Tsukuba &mdash; Research Lab</strong>
+          <span>Tsukuba, Japan</span>
+        </div>
+        <div class="flex flex-wrap justify-between gap-x-4 text-sm italic">
+          <span
+            >Research Intern, Deep Learning for Biological Signal Processing</span
+          >
+          <span>Sept 2025 &ndash; Feb 2026</span>
+        </div>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm sm:text-base">
+          <li>
+            Implemented DDPM, DDIM, and LDM diffusion variants in PyTorch for
+            EEG reconstruction on the anphy-sleep dataset (29 subjects,
+            83-channel HD-EEG).
+          </li>
+          <li>
+            Compared diffusion parameterizations (data-, noise-, and
+            velocity-prediction); selected velocity-prediction as the optimal
+            training objective.
+          </li>
+          <li>
+            Built EEG preprocessing pipelines covering signal segmentation and
+            data augmentation to expand the training distribution.
+          </li>
+          <li>
+            Proposed signal-space diffusion over latent-space alternatives;
+            adopted as my architecture after lab approval, tailored to EEG noise
+            distributions.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2
+        class="border-border mb-3 border-b pb-1 text-lg font-semibold tracking-wide uppercase"
+      >
+        Projects
+      </h2>
+
+      <div class="mb-5">
+        <div class="flex flex-wrap justify-between gap-x-4">
+          <strong>3D-Agent &mdash; Graduation Project</strong>
+          <a
+            href="https://github.com/hecrw/3D-Agent"
+            class="text-sm hover:text-accent underline decoration-dashed underline-offset-4"
+            >github.com/hecrw/3D-Agent</a
+          >
+        </div>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm sm:text-base">
+          <li>
+            Collaborated with a team of 4 on a multi-model 3D generation
+            pipeline (TRELLIS.2, PartCrafter, Hunyuan3D via Google AI Studio)
+            backed by FastAPI + Modal inference; environment managed with uv.
+          </li>
+          <li>
+            Designed the Django web interface and integrated the agent runtime
+            with a 12-tool layer &mdash; the project's primary user-facing
+            surface for text-to-3D generation and editing.
+          </li>
+          <li>
+            Co-developed an image-restyling preprocessing stage that conforms
+            generated 2D inputs to an Objaverse-style distribution, improving 3D
+            reconstruction quality.
+          </li>
+        </ul>
+      </div>
+
+      <div class="mb-5">
+        <div class="flex flex-wrap justify-between gap-x-4">
+          <strong>FraudShieldML &mdash; Credit Card Fraud Detection</strong>
+          <span class="text-sm">
+            <a
+              href="https://github.com/HamedDaoud/FraudShieldML"
+              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              >github.com/HamedDaoud/FraudShieldML</a
+            >
+            &middot;
+            <a
+              href="https://huggingface.co/spaces/hameddaoud/fraudshield-ml"
+              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              >live demo</a
+            >
+          </span>
+        </div>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm sm:text-base">
+          <li>
+            Engineered an end-to-end fraud detection system on a severely
+            imbalanced dataset (0.17% positives), reaching <strong>0.93
+              precision</strong>, <strong>0.82 recall</strong>, and <strong
+              >0.86 PR AUC</strong>.
+          </li>
+          <li>
+            Built a feature pipeline with log-transformed amounts, cyclic
+            temporal encoding, standard scaling, and SMOTE resampling to address
+            class imbalance.
+          </li>
+          <li>
+            Threshold-tuned a Random Forest classifier; served real-time
+            inference through a FastAPI service and a Gradio UI, containerized
+            with Docker Compose and deployed on Hugging Face Spaces.
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="flex flex-wrap justify-between gap-x-4">
+          <strong>Falcon-RW 1B &mdash; 4-bit Quantized Text Generation</strong>
+          <span class="text-sm">
+            <a
+              href="https://github.com/HamedDaoud/quantized-falcon-rw-1b"
+              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              >github.com/HamedDaoud/quantized-falcon-rw-1b</a
+            >
+            &middot;
+            <a
+              href="https://huggingface.co/spaces/hameddaoud/quantized-falcon-rw-1b"
+              class="hover:text-accent underline decoration-dashed underline-offset-4"
+              >live demo</a
+            >
+          </span>
+        </div>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm sm:text-base">
+          <li>
+            Quantized Falcon-RW 1B to 4-bit NormalFloat (NF4) with double
+            quantization via <code>bitsandbytes</code>, reducing memory
+            footprint by <strong>approximately 75%</strong> versus float32.
+          </li>
+          <li>
+            Configured <code>bfloat16</code> compute dtype with a CUDA &rarr;
+            MPS &rarr; CPU device-fallback chain and cached loading, so the same
+            model loader powers both the Gradio UI and the FastAPI service.
+          </li>
+          <li>
+            Containerized the application with Docker and deployed to Hugging
+            Face Spaces; backed the Gradio interface with a FastAPI <code
+              >/generate</code> endpoint for programmatic use.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2
+        class="border-border mb-3 border-b pb-1 text-lg font-semibold tracking-wide uppercase"
+      >
+        Technical Skills
+      </h2>
+      <dl class="space-y-2 text-sm sm:text-base">
+        <div>
+          <dt class="inline font-semibold">Programming:</dt>
+          <dd class="inline">Python, C++, JavaScript, SQL</dd>
+        </div>
+        <div>
+          <dt class="inline font-semibold">ML &amp; Deep Learning:</dt>
+          <dd class="inline">
+            PyTorch, TensorFlow, scikit-learn, Hugging Face Transformers, NumPy,
+            Pandas, Matplotlib, XGBoost
+          </dd>
+        </div>
+        <div>
+          <dt class="inline font-semibold">AI Methods:</dt>
+          <dd class="inline">
+            LLMs, NLP, Diffusion Models, Model Quantization, Computer Vision
+          </dd>
+        </div>
+        <div>
+          <dt class="inline font-semibold">MLOps &amp; Backend:</dt>
+          <dd class="inline">
+            Docker, Docker Compose, FastAPI, Modal, Hugging Face Spaces, Django,
+            Gradio, MLflow, Optuna, Google AI Studio, Git, Linux, uv
+          </dd>
+        </div>
+        <div>
+          <dt class="inline font-semibold">Cloud:</dt>
+          <dd class="inline">AWS (S3, EC2, Lambda, IAM, CloudWatch, RDS)</dd>
+        </div>
+        <div>
+          <dt class="inline font-semibold">Languages:</dt>
+          <dd class="inline">English (Native), Arabic (Native)</dd>
+        </div>
+      </dl>
+    </section>
+  </Main>
+  <Footer />
+</Layout>

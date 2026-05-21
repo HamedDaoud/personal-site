@@ -1,9 +1,9 @@
 ---
 title: "About"
-description: "ML/AI engineer. CS senior at EJUST."
+description: "AI Engineer. Computer Science Senior at E-JUST."
 ---
 
-ML/AI engineer. CS senior at [EJUST](https://ejust.edu.eg/).
+AI Engineer. Computer Science Senior at [E-JUST](https://ejust.edu.eg/).
 
 Currently building [3D-Agent](https://github.com/hecrw/3D-Agent) — a multi-model text-to-3D generation pipeline — as my graduation project. Recently worked on diffusion models for EEG signal reconstruction at the [University of Tsukuba](https://www.tsukuba.ac.jp/) (research intern, Sept 2025 – Feb 2026). Other projects: [Falcon-RW 1B 4-bit quantization](https://github.com/HamedDaoud/quantized-falcon-rw-1b), [FraudShieldML](https://github.com/HamedDaoud/FraudShieldML).
 

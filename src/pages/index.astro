@@ -33,29 +33,38 @@ const homePath = getRelativeLocaleUrl(locale, "");
     data-home-path={homePath}
     class="app-layout"
   >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <p class="my-4 sm:my-6">
-        ML/AI engineer. CS senior at <a
+    <section id="hero" class="border-border border-b pt-8 pb-8">
+      <h1 class="my-4 text-2xl font-semibold sm:my-6 sm:text-3xl">
+        AI Engineer. Computer Science Senior at <a
           class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://ejust.edu.eg/">EJUST</a>. More on the
+          href="https://ejust.edu.eg/">E-JUST</a>.
+      </h1>
+      <p class="mt-3">
+        More on the
         <LinkButton
           class="hover:text-accent underline decoration-dashed underline-offset-4"
           href={getRelativeLocaleUrl(locale, "about")}
         >
           about
         </LinkButton>
-        page, or grab my
+        page, browse the
         <LinkButton
           class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="/cv.pdf"
+          href={getRelativeLocaleUrl(locale, "projects")}
         >
-          CV
+          projects
+        </LinkButton>, or read my
+        <LinkButton
+          class="hover:text-accent underline decoration-dashed underline-offset-4"
+          href={getRelativeLocaleUrl(locale, "resume")}
+        >
+          resume
         </LinkButton>.
       </p>
       <a
         target="_blank"
         href={getRelativeLocaleUrl(locale, "rss.xml")}
-        class="inline-block"
+        class="mt-4 inline-block"
         aria-label="RSS Feed"
         title="RSS Feed"
       >

@@ -1,7 +1,4 @@
 ---
-// Scaffolded but not linked from nav yet. To activate:
-//   1. Add real project entries below
-//   2. Uncomment the "Projects" <li> in src/components/Header.astro
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
@@ -10,7 +7,94 @@ import Footer from "@/components/Footer.astro";
 import config from "@/config";
 
 const pageTitle = "Projects";
-const pageDescription = "Selected projects.";
+const pageDescription =
+  "Selected work in applied ML, agents, diffusion, and signal processing.";
+
+type Project = {
+  title: string;
+  meta: string;
+  status?: string;
+  blurb: string;
+  stack: string[];
+  links: { label: string; url: string }[];
+};
+
+const projects: Project[] = [
+  {
+    title: "3D-Agent",
+    meta: "Graduation project · Team of 4 · In progress",
+    blurb:
+      "Multi-model text-to-3D generation pipeline. An agent with a 12-tool layer orchestrates TRELLIS.2, PartCrafter, and Hunyuan3D (via Google AI Studio) behind a FastAPI + Modal inference backend and a Django web UI. I own the Django interface and the agent runtime, and co-developed an image-restyling preprocessor that conforms 2D inputs to an Objaverse-style distribution to improve reconstruction quality.",
+    stack: [
+      "PyTorch",
+      "LangChain",
+      "FastAPI",
+      "Modal",
+      "Django",
+      "Google AI Studio",
+      "uv",
+    ],
+    links: [{ label: "GitHub", url: "https://github.com/hecrw/3D-Agent" }],
+  },
+  {
+    title: "Diffusion Models for EEG Reconstruction",
+    meta: "Research intern · University of Tsukuba · Sept 2025 – Feb 2026",
+    blurb:
+      "Implemented DDPM, DDIM, and LDM diffusion variants in PyTorch for EEG signal reconstruction on the anphy-sleep dataset (29 subjects, 83-channel HD-EEG). Compared data-, noise-, and velocity-prediction parameterizations and selected velocity-prediction as the optimal training objective. Proposed signal-space diffusion over latent-space alternatives — adopted as the working architecture after lab approval, tailored to EEG noise distributions.",
+    stack: ["PyTorch", "DDPM", "DDIM", "LDM", "EEG / HD-EEG"],
+    links: [
+      { label: "Tsukuba", url: "https://www.tsukuba.ac.jp/" },
+    ],
+  },
+  {
+    title: "Falcon-RW 1B — 4-bit Quantized Text Generation",
+    meta: "Solo · 2025",
+    blurb:
+      "Quantized Falcon-RW 1B to 4-bit NormalFloat (NF4) with double quantization via bitsandbytes — roughly 75% smaller than float32 — and configured a bfloat16 compute dtype with a CUDA → MPS → CPU device-fallback chain. Cached model loading powers both a Gradio UI and a FastAPI /generate endpoint. Containerized with Docker and deployed to Hugging Face Spaces.",
+    stack: [
+      "Python",
+      "Hugging Face Transformers",
+      "bitsandbytes",
+      "FastAPI",
+      "Gradio",
+      "Docker",
+    ],
+    links: [
+      {
+        label: "GitHub",
+        url: "https://github.com/HamedDaoud/quantized-falcon-rw-1b",
+      },
+      {
+        label: "Live demo",
+        url: "https://huggingface.co/spaces/hameddaoud/quantized-falcon-rw-1b",
+      },
+    ],
+  },
+  {
+    title: "FraudShieldML — Credit Card Fraud Detection",
+    meta: "Solo · 2025",
+    blurb:
+      "End-to-end fraud detection on a severely imbalanced dataset (0.17% positives) reaching 0.93 precision, 0.82 recall, and 0.86 PR AUC. Feature pipeline uses log-transformed amounts, cyclic temporal encoding, standard scaling, and SMOTE resampling. A threshold-tuned Random Forest classifier is served through FastAPI and a Gradio UI, containerized with Docker Compose, deployed on Hugging Face Spaces.",
+    stack: [
+      "scikit-learn",
+      "XGBoost",
+      "SMOTE",
+      "FastAPI",
+      "Gradio",
+      "Docker Compose",
+    ],
+    links: [
+      {
+        label: "GitHub",
+        url: "https://github.com/HamedDaoud/FraudShieldML",
+      },
+      {
+        label: "Live demo",
+        url: "https://huggingface.co/spaces/hameddaoud/fraudshield-ml",
+      },
+    ],
+  },
+];
 ---
 
 <Layout
@@ -18,12 +102,44 @@ const pageDescription = "Selected projects.";
   description={pageDescription}
 >
   <Header />
-
   <Breadcrumb />
-
-  <Main pageTitle={pageTitle} class="app-prose">
-    <p>Coming soon.</p>
+  <Main pageTitle={pageTitle} pageDesc={pageDescription}>
+    <div class="mt-2 space-y-10">
+      {
+        projects.map(project => (
+          <article class="border-border border-b pb-8 last:border-b-0">
+            <header class="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h2 class="text-xl font-semibold sm:text-2xl">{project.title}</h2>
+              <p class="text-sm opacity-80">{project.meta}</p>
+            </header>
+            <p class="mb-3 leading-relaxed">{project.blurb}</p>
+            <p class="mb-3 text-sm">
+              <span class="font-semibold">Stack:</span>{" "}
+              <span class="opacity-90">{project.stack.join(" · ")}</span>
+            </p>
+            {project.links.length > 0 && (
+              <p class="text-sm">
+                {project.links.map((link, i) => (
+                  <>
+                    {i > 0 && <span class="mx-2 opacity-50">&middot;</span>}
+                    <a
+                      href={link.url}
+                      target={link.url.startsWith("http") ? "_blank" : undefined}
+                      rel={
+                        link.url.startsWith("http") ? "noopener" : undefined
+                      }
+                      class="hover:text-accent underline decoration-dashed underline-offset-4"
+                    >
+                      {link.label}
+                    </a>
+                  </>
+                ))}
+              </p>
+            )}
+          </article>
+        ))
+      }
+    </div>
   </Main>
-
   <Footer />
 </Layout>

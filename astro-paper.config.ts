@@ -5,7 +5,7 @@ export default defineAstroPaperConfig({
     url: "https://hameddaoud.pages.dev/",
     title: "Hamed Daoud",
     description:
-      "ML/AI engineer. CS senior at EJUST. Notes on diffusion models, agents, and applied ML.",
+      "AI Engineer. Computer Science Senior at E-JUST. Notes on diffusion models, agents, and applied ML.",
     author: "Hamed Daoud",
     profile: "https://hameddaoud.pages.dev/",
     ogImage: "default-og.jpg",

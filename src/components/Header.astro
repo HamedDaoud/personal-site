@@ -33,9 +33,7 @@ const isActive = (path: string) => {
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 
-// Projects page is scaffolded at src/pages/projects.astro but not linked yet.
-// Flip to `true` once there are real entries on it.
-const SHOW_PROJECTS_NAV = false;
+const SHOW_PROJECTS_NAV = true;
 ---
 
 <a
@@ -113,7 +111,12 @@ const SHOW_PROJECTS_NAV = false;
           </li>
         )}
         <li class="col-span-2">
-          <a href="/cv.pdf" target="_blank" rel="noopener">CV</a>
+          <a
+            href={getRelativeLocaleUrl(locale, "resume")}
+            class:list={{ "active-nav": isActive("/resume") }}
+          >
+            Resume
+          </a>
         </li>
         {
           features.showArchives && (

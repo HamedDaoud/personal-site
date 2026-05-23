@@ -1,28 +1,167 @@
 ---
-import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Socials from "@/components/Socials.astro";
-import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
-
+const { socials } = config;
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
-
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const homePath = getRelativeLocaleUrl(locale, "");
+
+const linkClass =
+  "text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all";
+
+const ctaClass =
+  "border-border hover:border-accent hover:bg-accent inline-flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-sm font-medium transition-colors hover:text-white";
+
+type Project = {
+  title: string;
+  meta: string;
+  status?: "Live" | "In progress" | "Research";
+  hook: string;
+  description: string;
+  stack: string[];
+  links: { label: string; url: string }[];
+  featured?: boolean;
+};
+
+const projects: Project[] = [
+  {
+    title: "3D-Agent",
+    meta: "Graduation project · Team of 4",
+    status: "In progress",
+    featured: true,
+    hook: "Text in, 3D out — but smart about which model to use.",
+    description:
+      "A graduation project building the agent layer over a fragmented 3D generation ecosystem. The runtime decides between TRELLIS.2, PartCrafter, and Hunyuan3D for each request, then routes through a FastAPI + Modal inference backend with a Django web UI. I own the agent runtime and its 12-tool surface, plus an image-restyling preprocessor that conforms 2D inputs to an Objaverse-style distribution so reconstruction quality holds up across input styles.",
+    stack: [
+      "PyTorch",
+      "LangChain",
+      "FastAPI",
+      "Modal",
+      "Django",
+      "Google AI Studio",
+    ],
+    links: [{ label: "GitHub", url: "https://github.com/hecrw/3D-Agent" }],
+  },
+  {
+    title: "Diffusion Models for EEG Reconstruction",
+    meta: "Research intern · University of Tsukuba",
+    status: "Research",
+    hook: "Diffusion models — the tech behind Stable Diffusion — applied to brain signals.",
+    description:
+      "A six-month research stint applying generative diffusion to high-density EEG. Implemented DDPM, DDIM, and LDM variants in PyTorch on the anphy-sleep dataset (29 subjects, 83-channel HD-EEG), then ran a controlled comparison of data-, noise-, and velocity-prediction objectives and landed on velocity-prediction. Proposed signal-space diffusion over the lab's default latent-space approach; the architecture was adopted after review for its better fit with EEG noise distributions.",
+    stack: ["PyTorch", "DDPM", "DDIM", "LDM", "HD-EEG"],
+    links: [
+      { label: "University of Tsukuba", url: "https://www.tsukuba.ac.jp/" },
+    ],
+  },
+  {
+    title: "Falcon-RW 1B — 4-bit Quantization",
+    meta: "Solo · 2025",
+    status: "Live",
+    hook: "A 1B-parameter LLM that runs on a laptop.",
+    description:
+      "Took Falcon-RW 1B from a float32 model that needs a real GPU down to NF4 4-bit with double quantization via bitsandbytes — roughly 75% smaller — without losing the ability to ship it as a real product. A bfloat16 compute dtype with a CUDA → MPS → CPU fallback chain and cached loading lets the same model power both a Gradio UI and a FastAPI /generate endpoint. Containerized with Docker, deployed to Hugging Face Spaces.",
+    stack: ["Transformers", "bitsandbytes", "FastAPI", "Gradio", "Docker"],
+    links: [
+      {
+        label: "GitHub",
+        url: "https://github.com/HamedDaoud/quantized-falcon-rw-1b",
+      },
+      {
+        label: "Live demo",
+        url: "https://huggingface.co/spaces/hameddaoud/quantized-falcon-rw-1b",
+      },
+    ],
+  },
+  {
+    title: "FraudShieldML",
+    meta: "Solo · 2025",
+    status: "Live",
+    hook: "Catching credit-card fraud where the positive class is 0.17% of the data.",
+    description:
+      "End-to-end fraud detection on a brutally imbalanced dataset, ending at 0.93 precision, 0.82 recall, and 0.86 PR AUC. The feature pipeline log-transforms amounts, cyclically encodes time-of-day, scales, and applies SMOTE to fight the class imbalance. A threshold-tuned Random Forest ships behind a FastAPI service and a Gradio UI, containerized with Docker Compose and deployed to Hugging Face Spaces.",
+    stack: [
+      "scikit-learn",
+      "XGBoost",
+      "SMOTE",
+      "FastAPI",
+      "Gradio",
+      "Docker Compose",
+    ],
+    links: [
+      { label: "GitHub", url: "https://github.com/HamedDaoud/FraudShieldML" },
+      {
+        label: "Live demo",
+        url: "https://huggingface.co/spaces/hameddaoud/fraudshield-ml",
+      },
+    ],
+  },
+];
+
+const featured = projects.find(p => p.featured)!;
+const others = projects.filter(p => !p.featured);
+
+const statusStyles: Record<NonNullable<Project["status"]>, string> = {
+  Live: "border-accent/40 text-accent",
+  "In progress": "border-border opacity-80",
+  Research: "border-border opacity-80",
+};
+
+const eras = [
+  {
+    label: "Foundation",
+    range: "2022 — 2024",
+    body: "Started B.Sc. Computer Science & IT at E-JUST with an AI & Data Science major. Worked through the math and ML foundations alongside coursework, and got my hands on PyTorch and the deep-learning stack.",
+    lesson: "The era I got certain ML is what I want to build.",
+  },
+  {
+    label: "Shipping",
+    range: "2024 — 2025",
+    body: "First end-to-end deployed ML systems. FraudShieldML — fraud detection on a 0.17%-positive dataset, served behind FastAPI + Docker on Hugging Face Spaces. Then Falcon-RW 1B quantized to 4-bit NF4, a 1B-parameter LLM that runs on a laptop.",
+    lesson:
+      "The era I learned that 'works in Colab' and 'runs in production' are different problems.",
+  },
+  {
+    label: "Research",
+    range: "Sept 2025 — Feb 2026",
+    body: "Six months at the University of Tsukuba on the EJEP exchange program. Research intern on diffusion models — DDPM, DDIM, LDM variants — for EEG signal reconstruction. Proposed signal-space diffusion over the lab's default latent-space approach; it was adopted as the working architecture.",
+    lesson: "The era I learned what research at full intensity feels like.",
+  },
+  {
+    label: "Now",
+    range: "2025 — present",
+    body: "Building 3D-Agent, a multi-model text-to-3D generation pipeline, as my graduation project with a team of 4. I own the agent runtime and its 12-tool surface over TRELLIS.2, PartCrafter, and Hunyuan3D.",
+    lesson:
+      "Graduating Fall 2026. Targeting AI/ML engineering roles in industry.",
+  },
+];
+
+const skills = [
+  {
+    heading: "Building ML systems",
+    body: "PyTorch and TensorFlow for model work — diffusion (DDPM, DDIM, LDM), Transformers, CNNs. Hugging Face Transformers + bitsandbytes for LLM quantization. scikit-learn and XGBoost when classical models are the right call.",
+  },
+  {
+    heading: "Shipping them",
+    body: "FastAPI for serving, Modal for inference, Gradio for demos. Docker and Docker Compose for containers; Hugging Face Spaces for free public deploys. Django when a richer web surface is needed.",
+  },
+  {
+    heading: "Data & experiments",
+    body: "NumPy, Pandas, Matplotlib for the day-to-day. MLflow + Optuna for tracking and tuning. SMOTE and the imbalanced-data toolkit when the positive class is rare.",
+  },
+  {
+    heading: "Infrastructure",
+    body: "Python (primary), C++, JavaScript, SQL. AWS basics (S3, EC2, Lambda, IAM, CloudWatch, RDS). Linux, Git, uv. Comfortable in research environments and production-leaning ones alike.",
+  },
+];
 ---
 
 <Layout>
@@ -33,99 +172,353 @@ const homePath = getRelativeLocaleUrl(locale, "");
     data-home-path={homePath}
     class="app-layout"
   >
+    <!-- Hero -->
     <section id="hero" class="border-border border-b pt-8 pb-8">
       <h1 class="my-4 text-2xl font-semibold sm:my-6 sm:text-3xl">
         I build AI systems &mdash; agents, diffusion models, and applied ML.
       </h1>
       <p class="mt-3">
         Senior at <a
-          class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
-          href="https://ejust.edu.eg/">E-JUST</a>. More on the
-        <LinkButton
-          class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
-          href={getRelativeLocaleUrl(locale, "about")}
-        >
-          about
-        </LinkButton>
-        page, browse the
-        <LinkButton
-          class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
-          href={getRelativeLocaleUrl(locale, "projects")}
-        >
-          projects
-        </LinkButton>, or read my
-        <LinkButton
-          class="text-accent underline underline-offset-4 decoration-accent/50 hover:decoration-accent decoration-1 hover:decoration-2 transition-all"
-          href={getRelativeLocaleUrl(locale, "resume")}
-        >
-          resume
-        </LinkButton>.
+          class={linkClass}
+          href="https://ejust.edu.eg/"
+          target="_blank"
+          rel="noopener">E-JUST</a
+        >. Recently a research intern at the <a
+          class={linkClass}
+          href="https://www.tsukuba.ac.jp/"
+          target="_blank"
+          rel="noopener">University of Tsukuba</a
+        > on diffusion models for EEG.
       </p>
-      <a
-        target="_blank"
-        href={getRelativeLocaleUrl(locale, "rss.xml")}
-        class="mt-4 inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <Socials />
-          </div>
-        )
-      }
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a href="#projects" class={ctaClass}>
+          See what I'm building
+          <span aria-hidden="true">&darr;</span>
+        </a>
+        {
+          socials.length > 0 && (
+            <div class="flex items-center">
+              <Socials />
+            </div>
+          )
+        }
+      </div>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
+    <!-- Affiliations -->
+    <section id="affiliations" class="border-border border-b py-6">
+      <ul
+        class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-center"
+      >
+        <li>
+          <a
+            href="https://ejust.edu.eg/"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-accent group inline-block transition-colors"
+          >
+            <div
+              class="font-serif text-lg font-bold tracking-tight sm:text-xl"
+            >
+              E-JUST
+            </div>
+            <div class="mt-0.5 text-xs opacity-70">
+              Egypt-Japan University of Science & Technology
+            </div>
+          </a>
+        </li>
+        <li class="text-border" aria-hidden="true">|</li>
+        <li>
+          <a
+            href="https://www.tsukuba.ac.jp/"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-accent group inline-block transition-colors"
+          >
+            <div
+              class="font-serif text-lg font-bold tracking-tight sm:text-xl"
+            >
+              University of Tsukuba
+            </div>
+            <div class="mt-0.5 text-xs opacity-70">
+              EJEP Exchange · Research Intern
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="border-border border-b pt-12 pb-10">
+      <h2 class="text-2xl font-semibold tracking-tight">About</h2>
+      <div class="mt-4 space-y-4 leading-relaxed">
+        <p>
+          I'm Hamed Daoud, a computer science senior at E-JUST with an AI &amp;
+          Data Science major. My interests sit at the intersection of applied
+          ML and the systems work it takes to ship models into something
+          people actually use &mdash; diffusion, agents, LLMs, and the
+          MLOps glue around them.
+        </p>
+        <p>
+          Most recently I spent six months at the University of Tsukuba as a
+          research intern, working on diffusion models for EEG signal
+          reconstruction. Before that, I built and deployed a 4-bit quantized
+          Falcon-RW 1B LLM and FraudShieldML on Hugging Face Spaces. Right
+          now I'm building 3D-Agent &mdash; a multi-model text-to-3D
+          generation pipeline &mdash; as my graduation project. I graduate
+          Fall 2026.
+        </p>
+      </div>
+      <div class="mt-6 flex flex-wrap items-center gap-x-2 gap-y-2">
+        <span class="text-sm opacity-80">Learn more about my:</span>
+        <a href="#projects" class={ctaClass}>Projects</a>
+        <a href="#timeline" class={ctaClass}>Timeline</a>
+        <a href={getRelativeLocaleUrl(locale, "resume")} class={ctaClass}
+          >Resume</a
         >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+      </div>
+    </section>
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <!-- Projects -->
+    <section id="projects" class="border-border border-b pt-12 pb-10">
+      <h2 class="text-2xl font-semibold tracking-tight">
+        Things I've Worked On
+      </h2>
+      <p class="mt-2 text-sm opacity-80">
+        Four projects spanning agents, diffusion research, LLM quantization,
+        and applied ML.
+      </p>
 
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
+      <!-- Featured project -->
+      <article
+        class="border-accent/40 bg-muted/20 hover:border-accent mt-6 rounded-lg border-2 p-5 transition-colors sm:p-7"
+      >
+        <header
+          class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1"
+        >
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span
+              class="text-accent text-[11px] font-semibold tracking-widest uppercase"
+              >Featured</span
+            >
+            <h3 class="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {featured.title}
+            </h3>
+            {
+              featured.status && (
+                <span
+                  class:list={[
+                    "rounded-full border px-2 py-0.5 text-xs font-medium",
+                    statusStyles[featured.status],
+                  ]}
+                >
+                  {featured.status}
+                </span>
+              )
+            }
+          </div>
+          <p class="text-sm opacity-70">{featured.meta}</p>
+        </header>
+
+        <p class="text-accent mb-3 text-lg italic sm:text-xl">
+          {featured.hook}
+        </p>
+
+        <p class="mb-4 leading-relaxed opacity-90">{featured.description}</p>
+
+        <ul class="mb-4 flex flex-wrap gap-1.5">
+          {
+            featured.stack.map(item => (
+              <li class="border-border bg-background rounded border px-2 py-0.5 font-mono text-xs">
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="flex flex-wrap gap-2">
+          {
+            featured.links.map(link => (
+              <a
+                href={link.url}
+                target={link.url.startsWith("http") ? "_blank" : undefined}
+                rel={link.url.startsWith("http") ? "noopener" : undefined}
+                class="border-border hover:border-accent hover:text-accent inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-sm font-medium transition-colors"
+              >
+                {link.label}
+                <span aria-hidden="true" class="text-xs">&#8599;</span>
+              </a>
+            ))
+          }
+        </div>
+      </article>
+
+      <!-- Other projects -->
+      <div class="mt-6 grid gap-4">
+        {
+          others.map(project => (
+            <article class="border-border hover:border-accent/50 rounded-lg border p-5 transition-colors sm:p-6">
+              <header class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <h3 class="text-xl font-semibold tracking-tight sm:text-2xl">
+                    {project.title}
+                  </h3>
+                  {project.status && (
+                    <span
+                      class:list={[
+                        "rounded-full border px-2 py-0.5 text-xs font-medium",
+                        statusStyles[project.status],
+                      ]}
+                    >
+                      {project.status}
+                    </span>
+                  )}
+                </div>
+                <p class="text-sm opacity-70">{project.meta}</p>
+              </header>
+
+              <p class="text-accent mb-3 text-base italic sm:text-lg">
+                {project.hook}
+              </p>
+
+              <p class="mb-4 leading-relaxed opacity-90">
+                {project.description}
+              </p>
+
+              <ul class="mb-4 flex flex-wrap gap-1.5">
+                {project.stack.map(item => (
+                  <li class="border-border bg-muted/30 rounded border px-2 py-0.5 font-mono text-xs">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              {project.links.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {project.links.map(link => (
+                    <a
+                      href={link.url}
+                      target={link.url.startsWith("http") ? "_blank" : undefined}
+                      rel={link.url.startsWith("http") ? "noopener" : undefined}
+                      class="border-border hover:border-accent hover:text-accent inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-sm font-medium transition-colors"
+                    >
+                      {link.label}
+                      <span aria-hidden="true" class="text-xs">
+                        &#8599;
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center gap-2">
+        <span class="text-sm opacity-80">To see more:</span>
+        <a
+          href="https://github.com/HamedDaoud"
+          target="_blank"
+          rel="noopener"
+          class={ctaClass}
+        >
+          More on GitHub
+          <span aria-hidden="true">&#8599;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline" class="border-border border-b pt-12 pb-10">
+      <h2 class="text-2xl font-semibold tracking-tight">Timeline</h2>
+      <p class="mt-2 text-sm opacity-80">The journey so far, in four eras.</p>
+
+      <ol class="mt-8 space-y-8 sm:space-y-10">
+        {
+          eras.map((era, i) => (
+            <li class="border-border relative ms-4 border-s ps-6 sm:ms-6 sm:ps-8">
+              <span
+                class:list={[
+                  "absolute -start-[6px] mt-1.5 block size-3 rounded-full ring-2",
+                  i === eras.length - 1
+                    ? "bg-accent ring-background"
+                    : "bg-border ring-background",
+                ]}
+                aria-hidden="true"
+              />
+              <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h3 class="text-xs font-semibold tracking-widest uppercase sm:text-sm">
+                  {era.label}
+                </h3>
+                <p class="text-sm opacity-70">{era.range}</p>
+              </header>
+              <p class="mt-2 leading-relaxed">{era.body}</p>
+              <p class="text-accent mt-2 text-sm italic">
+                &rarr; {era.lesson}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="border-border border-b pt-12 pb-10">
+      <h2 class="text-2xl font-semibold tracking-tight">Skills</h2>
+      <p class="mt-2 text-sm opacity-80">
+        Tools I reach for, grouped by what I actually use them for.
+      </p>
+      <dl class="mt-6 grid gap-6 sm:grid-cols-2">
+        {
+          skills.map(group => (
+            <div>
+              <dt class="text-sm font-semibold tracking-wide">
+                {group.heading}
+              </dt>
+              <dd class="mt-1 leading-relaxed opacity-90">{group.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="pt-12 pb-12">
+      <h2 class="text-2xl font-semibold tracking-tight">Reach Out</h2>
+      <p class="mt-3 leading-relaxed">
+        Best way to reach me is email &mdash;
+        <a class={linkClass} href="mailto:itshamedahmed@gmail.com"
+          >itshamedahmed@gmail.com</a
+        >. I'm also on
+        <a
+          class={linkClass}
+          href="https://github.com/HamedDaoud"
+          target="_blank"
+          rel="noopener">GitHub</a
+        >
+        and
+        <a
+          class={linkClass}
+          href="https://www.linkedin.com/in/hameddaoud/"
+          target="_blank"
+          rel="noopener">LinkedIn</a
+        >.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center gap-2">
+        <a href="mailto:itshamedahmed@gmail.com" class={ctaClass}>
+          Send an email
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+        <LinkButton
+          href={getRelativeLocaleUrl(locale, "posts")}
+          class="text-sm opacity-80 hover:opacity-100"
+        >
+          {t.home.allPosts}
+          <IconArrowRight class="inline-block rtl:-rotate-180" />
+        </LinkButton>
+      </div>
+    </section>
   </main>
   <Footer />
 </Layout>

@@ -33,7 +33,7 @@ const isActive = (path: string) => {
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 
-const SHOW_PROJECTS_NAV = true;
+const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
 <a
@@ -93,23 +93,20 @@ const SHOW_PROJECTS_NAV = true;
           </a>
         </li>
         <li class="col-span-2">
-          <a
-            href={getRelativeLocaleUrl(locale, "about")}
-            class:list={{ "active-nav": isActive("/about") }}
-          >
+          <a href={`${homePath}#about`}>
             {t.nav.about}
           </a>
         </li>
-        {SHOW_PROJECTS_NAV && (
-          <li class="col-span-2">
-            <a
-              href={getRelativeLocaleUrl(locale, "projects")}
-              class:list={{ "active-nav": isActive("/projects") }}
-            >
-              Projects
-            </a>
-          </li>
-        )}
+        <li class="col-span-2">
+          <a href={`${homePath}#projects`}>
+            Projects
+          </a>
+        </li>
+        <li class="col-span-2">
+          <a href={`${homePath}#timeline`}>
+            Timeline
+          </a>
+        </li>
         <li class="col-span-2">
           <a
             href={getRelativeLocaleUrl(locale, "resume")}
